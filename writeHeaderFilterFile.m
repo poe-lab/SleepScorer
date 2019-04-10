@@ -1,0 +1,23 @@
+function writeHeaderFilterFile(newname)
+% Write the filter info to a real .XLS file here:
+global EMG_Fc EMG_LP_Fc EMG_Notch_enable EEG_HP_Fc EEG_Fc EEG_Notch_enable...  
+    Input3_enable Input3_LP_Fc Input3_Notch_enable Input3_HP_Fc...
+    Input4_enable Input4_HP_Fc Input4_Notch_enable Input4_LP_Fc
+
+if Input3_enable == 0 
+    Input3_HP_Fc = -1;
+    Input3_LP_Fc = -1;
+end
+if Input4_enable == 0 
+    Input4_HP_Fc = -1;
+    Input4_LP_Fc = -1;  
+end
+headerFile = regexprep(newname, '.xls', 'Header.xls');
+sheetName = 'Sheet1';
+columnHeaders = {'EMG HP:', EMG_Fc, 'EMG LP:', EMG_LP_Fc,...
+    'EMG Notch:', EMG_Notch_enable, 'EEG LP:', EEG_Fc,...
+    'EEG HP:', EEG_HP_Fc, 'EEG Notch:', EEG_Notch_enable,...
+    'Input3 HP:', Input3_HP_Fc, 'Input3 LP:', Input3_LP_Fc...
+    'Input3 Notch:', Input3_Notch_enable, 'Input4 HP:', Input4_HP_Fc...
+    'Input4 LP:', Input4_LP_Fc, 'Input4 Notch:', Input4_Notch_enable};
+xlswrite(headerFile,columnHeaders, sheetName, 'A1');
