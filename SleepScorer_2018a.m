@@ -41,8 +41,7 @@
 % click anywhere on the Sleep Scorer background to be able to score using 
 % the number keys and navigate using the left and right arrow keys.
 % 
-% --The output header file now saves as a real Excel file. The user will 
-% still have to save the scored file as a real Excel file.
+% --The output SCORED and header files now save as a real Excel file. 
 %% Sleep Scorer
 % VERSION 08.11.2017 Modified by Brooks A. Gross
 % --Added support for DSI EDF files
@@ -105,123 +104,124 @@
 % Created by Apurva Turakhia on Jun-24-2003
 %##########################################################################     
 %%%%%Original Sleep Scorer Figure code
+% function varargout = SleepScorer_2018a(varargin)
+% %    sleepscorer_2018a Application M-file for SleepScorer_2018a.fig
+% %    FIG = sleepscorer_2018a launch SleepScorer_2018a GUI.
+% %    sleepscorer_2018a('callback_name', ...) invoke the named callback.
+% global  Sleepstates Statecolors FileFlag
+% 
+% 
+% FileFlag = 1;
+% Sleepstates=['Active Waking   '; ' Quiet Sleep    '; '     REM        ';'Quiet Waking    ';...
+%     '   Unhooked     '; '  Trans to REM  ';' Unidentifiable ';'Intermed Waking '];
+% Statecolors = [ 1 0.97 0; 0.1 0.3 1; 0.97 0.06 0; 0 1 0.1 ; 0 0 0; 0 1 1; 0.85 0.85 0.85; 1 1 1]; 
+% %Changed UNHOOKED to black to be consistent with Auto-Scorer colors.
+% if nargin == 0  % LAUNCH GUI
+%     
+%     fig = openfig(mfilename,'reuse');
+%     
+%     % Generate a structure of handles to pass to callbacks, and store it. 
+%     handles = guihandles(fig);
+%     guidata(fig, handles);
+%     
+%     if nargout > 0
+%         varargout{1} = fig;
+%     end
+% elseif ischar(varargin{1}) % INVOKE NAMED SUBFUNCTION OR CALLBACK
+%     
+%     try
+%         if (nargout)
+%             [varargout{1:nargout}] = feval(varargin{:}); % FEVAL switchyard
+%         else
+%             feval(varargin{:}); % FEVAL switchyard
+%         end
+%     catch ME
+%         errordlg(ME.message,ME.identifier);
+%     end
+%     
+% end
+
+%%%%%%
 function varargout = SleepScorer_2018a(varargin)
-%    sleepscorer_2018a Application M-file for SleepScorer_2018a.fig
-%    FIG = sleepscorer_2018a launch SleepScorer_2018a GUI.
-%    sleepscorer_2018a('callback_name', ...) invoke the named callback.
+% SleepScorer_2018a M-file for SleepScorer_2018a.fig
+%      SleepScorer_2018a, by itself, creates a new SleepScorer_2018a or raises the existing
+%      singleton*.
+%
+%      H = SleepScorer_2018a returns the handle to a new SleepScorer_2018a or the handle to
+%      the existing singleton*.
+%
+%      SleepScorer_2018a('CALLBACK',hObject,eventData,handles,...) calls the local
+%      function named CALLBACK in SleepScorer_2018a.M with the given input arguments.
+%
+%      SleepScorer_2018a('Property','Value',...) creates a new SleepScorer_2018a or raises the
+%      existing singleton*.  Starting from the left, property value pairs are
+%      applied to the GUI before sleepscorer2_OpeningFcn gets called.  An
+%      unrecognized property name or invalid value makes property application
+%      stop.  All inputs are passed to sleepscorer2_OpeningFcn via varargin.
+%
+%      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
+%      instance to run (singleton)".
+%
+% See also: GUIDE, GUIDATA, GUIHANDLES
+
+% Edit the above text to modify the response to help SleepScorer_2018a
+
+% Last Modified by GUIDE v2.5 04-Sep-2018 12:36:00
+
+% Begin initialization code - DO NOT EDIT
+gui_Singleton = 1;
+gui_State = struct('gui_Name',       mfilename, ...
+                   'gui_Singleton',  gui_Singleton, ...
+                   'gui_OpeningFcn', @SleepScorer_2018a_OpeningFcn, ...
+                   'gui_OutputFcn',  @SleepScorer_2018a_OutputFcn, ...
+                   'gui_LayoutFcn',  [] , ...
+                   'gui_Callback',   []);
+if nargin && ischar(varargin{1})
+    gui_State.gui_Callback = str2func(varargin{1});
+end
+
+if nargout
+    [varargout{1:nargout}] = gui_mainfcn(gui_State, varargin{:});
+else
+    gui_mainfcn(gui_State, varargin{:});
+end
+% End initialization code - DO NOT EDIT
+
+
+% --- Executes just before SleepScorer_2018a is made visible.
+function SleepScorer_2018a_OpeningFcn(hObject, eventdata, handles, varargin)
+% This function has no output args, see OutputFcn.
+% hObject    handle to figure
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% varargin   command line arguments to SleepScorer_2018a (see VARARGIN)
+
+% Choose default command line output for SleepScorer_2018a
+handles.output = hObject;
+
+% Update handles structure
+guidata(hObject, handles);
+
+% UIWAIT makes SleepScorer_2018a wait for user response (see UIRESUME)
+% uiwait(handles.figure1);
+
+
+% --- Outputs from this function are returned to the command line.
+function varargout = SleepScorer_2018a_OutputFcn(hObject, eventdata, handles) 
+% varargout  cell array for returning output args (see VARARGOUT);
+% hObject    handle to figure
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Get default command line output from handles structure
+varargout{1} = handles.output;
+%%%%%
 global  Sleepstates Statecolors FileFlag
-
-
 FileFlag = 1;
 Sleepstates=['Active Waking   '; ' Quiet Sleep    '; '     REM        ';'Quiet Waking    ';...
     '   Unhooked     '; '  Trans to REM  ';' Unidentifiable ';'Intermed Waking '];
 Statecolors = [ 1 0.97 0; 0.1 0.3 1; 0.97 0.06 0; 0 1 0.1 ; 0 0 0; 0 1 1; 0.85 0.85 0.85; 1 1 1]; 
 %Changed UNHOOKED to black to be consistent with Auto-Scorer colors.
-if nargin == 0  % LAUNCH GUI
-    
-    fig = openfig(mfilename,'reuse');
-    
-    % Generate a structure of handles to pass to callbacks, and store it. 
-    handles = guihandles(fig);
-    guidata(fig, handles);
-    
-    if nargout > 0
-        varargout{1} = fig;
-    end
-elseif ischar(varargin{1}) % INVOKE NAMED SUBFUNCTION OR CALLBACK
-    
-    try
-        if (nargout)
-            [varargout{1:nargout}] = feval(varargin{:}); % FEVAL switchyard
-        else
-            feval(varargin{:}); % FEVAL switchyard
-        end
-    catch ME
-        errordlg(ME.message,ME.identifier);
-    end
-    
-end
-
-%%%%%%
-% function varargout = SleepScorer_2018a(varargin)
-% % SleepScorer_2018a M-file for SleepScorer_2018a.fig
-% %      SleepScorer_2018a, by itself, creates a new SleepScorer_2018a or raises the existing
-% %      singleton*.
-% %
-% %      H = SleepScorer_2018a returns the handle to a new SleepScorer_2018a or the handle to
-% %      the existing singleton*.
-% %
-% %      SleepScorer_2018a('CALLBACK',hObject,eventData,handles,...) calls the local
-% %      function named CALLBACK in SleepScorer_2018a.M with the given input arguments.
-% %
-% %      SleepScorer_2018a('Property','Value',...) creates a new SleepScorer_2018a or raises the
-% %      existing singleton*.  Starting from the left, property value pairs are
-% %      applied to the GUI before sleepscorer2_OpeningFcn gets called.  An
-% %      unrecognized property name or invalid value makes property application
-% %      stop.  All inputs are passed to sleepscorer2_OpeningFcn via varargin.
-% %
-% %      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
-% %      instance to run (singleton)".
-% %
-% % See also: GUIDE, GUIDATA, GUIHANDLES
-% 
-% % Edit the above text to modify the response to help SleepScorer_2018a
-% 
-% % Last Modified by GUIDE v2.5 04-Sep-2018 12:36:00
-% 
-% % Begin initialization code - DO NOT EDIT
-% gui_Singleton = 1;
-% gui_State = struct('gui_Name',       mfilename, ...
-%                    'gui_Singleton',  gui_Singleton, ...
-%                    'gui_OpeningFcn', @SleepScorer_2018a_OpeningFcn, ...
-%                    'gui_OutputFcn',  @SleepScorer_2018a_OutputFcn, ...
-%                    'gui_LayoutFcn',  [] , ...
-%                    'gui_Callback',   []);
-% if nargin && ischar(varargin{1})
-%     gui_State.gui_Callback = str2func(varargin{1});
-% end
-% 
-% if nargout
-%     [varargout{1:nargout}] = gui_mainfcn(gui_State, varargin{:});
-% else
-%     gui_mainfcn(gui_State, varargin{:});
-% end
-% % End initialization code - DO NOT EDIT
-% 
-% 
-% % --- Executes just before SleepScorer_2018a is made visible.
-% function SleepScorer_2018a_OpeningFcn(hObject, eventdata, handles, varargin)
-% % This function has no output args, see OutputFcn.
-% % hObject    handle to figure
-% % eventdata  reserved - to be defined in a future version of MATLAB
-% % handles    structure with handles and user data (see GUIDATA)
-% % varargin   command line arguments to SleepScorer_2018a (see VARARGIN)
-% 
-% % Choose default command line output for SleepScorer_2018a
-% handles.output = hObject;
-% 
-% % Update handles structure
-% guidata(hObject, handles);
-% 
-% % UIWAIT makes SleepScorer_2018a wait for user response (see UIRESUME)
-% % uiwait(handles.figure1);
-% 
-% 
-% % --- Outputs from this function are returned to the command line.
-% function varargout = SleepScorer_2018a_OutputFcn(hObject, eventdata, handles) 
-% % varargout  cell array for returning output args (see VARARGOUT);
-% % hObject    handle to figure
-% % eventdata  reserved - to be defined in a future version of MATLAB
-% % handles    structure with handles and user data (see GUIDATA)
-% 
-% % Get default command line output from handles structure
-% varargout{1} = handles.output;
-%%%%%%
-% global  Sleepstates Statecolors
-% Sleepstates=['Active Waking   '; ' Quiet Sleep    '; '     REM        ';'Quiet Waking    ';...
-%     '   Unhooked     '; '  Trans to REM  ';' Unidentifiable ';'Intermed Waking '];
-% Statecolors = [ 1 0.97 0; 0.1 0.3 1; 0.97 0.06 0; 0 1 0.1 ; 0 0 0; 0 1 1; 0.85 0.85 0.85; 1 1 1]; 
-% %Changed UNHOOKED to black to be consistent with Auto-Scorer colors.
 
 %% ########################################################################
 %                       FILE SELECTION FUNCTIONS
@@ -799,7 +799,7 @@ if get(handles.PSDvaluescheckbox,'Value') == 1
         powerdensity_for_epoch;
 end
 moveRight = 1; moveLeft = 1;
-guidata(handles.sleepscorer,handles);
+guidata(handles.SleepScorer_2018a,handles);
 
 function Previousframe_Callback(h, eventdata, handles, varargin)
 %% This section of code is executed when the 'Previous Epoch' button is clicked.
@@ -909,7 +909,7 @@ if get(handles.PSDvaluescheckbox,'Value') == 1
     powerdensity_for_epoch;
 end
 moveRight = 1;  moveLeft = 1;
-guidata(handles.sleepscorer,handles);
+guidata(handles.SleepScorer_2018a,handles);
 
 function Moveleft_Callback(h, eventdata, handles, varargin) %#ok<*INUSD>
 %% Activates when clicking on the left arrow of the slider
@@ -924,7 +924,7 @@ plot_epochdata_on_axes_in_GUI_08282018(num2str(start_point));
 SLIDERVALUE=(100*EPOCH_StartPoint)/length(EMG_TIMESTAMPS);
 set(handles.slider1, 'Value',SLIDERVALUE); 
 moveLeft=moveLeft + 1;
-guidata(handles.sleepscorer,handles);
+guidata(handles.SleepScorer_2018a,handles);
 
 function Moveright_Callback(h, eventdata, handles, varargin)
 %% Activates when clicking on the right arrow of the slider
@@ -936,7 +936,7 @@ SLIDERVALUE=(100*EPOCH_StartPoint)/length(EMG_TIMESTAMPS);
 set(handles.slider1, 'Value',SLIDERVALUE); 
 viewStates;
 moveRight = moveRight + 1;
-guidata(handles.sleepscorer,handles);
+guidata(handles.SleepScorer_2018a,handles);
 
 function slider1_Callback(h, eventdata, handles, varargin)
 %% Activates when using the slider
@@ -1054,7 +1054,7 @@ set(handles.sigmatheta,'String','');
 set(handles.deltatheta,'String','');
 set(handles.beta_edit,'String','');
 moveRight = 1; moveLeft = 1;
-guidata(handles.sleepscorer,handles);
+guidata(handles.SleepScorer_2018a,handles);
 
 function epochSizeMenu_Callback(hObject, eventdata, handles)
 %% Changes the epoch size to be scored or viewed
@@ -1105,7 +1105,7 @@ switch epochVal
         plot_epochdata_on_axes_in_GUI_08282018;
 end
 handles.moveright = 1;  handles.moveleft = 1;
-guidata(handles.sleepscorer,handles);
+guidata(handles.SleepScorer_2018a,handles);
 %**************************************************************************
 
 
@@ -1282,7 +1282,7 @@ if isequal(epochScoringSize, epochVal)
                 powerdensity_for_epoch;
         end
         moveRight = 1; moveLeft = 1;
-        guidata(handles.sleepscorer,handles);
+        guidata(handles.SleepScorer_2018a,handles);
     else
         uiwait(errordlg('Cannot use the AutoFill.This is just the next frame',...
             'ERROR','modal'));
@@ -1311,9 +1311,9 @@ end
 function keyScoreCheckbox_Callback(hObject, eventdata, handles)
 enableKeyScoring = get(handles.keyScoreCheckbox, 'Value');
 if isequal(enableKeyScoring, 1)
-    set(handles.sleepscorer,'KeyPressFcn',@keyScoring);
+    set(handles.SleepScorer_2018a,'KeyPressFcn',@keyScoring);
 else
-    set(handles.sleepscorer,'KeyPressFcn','');
+    set(handles.SleepScorer_2018a,'KeyPressFcn','');
 end
 
 function keyScoring(src,event)
@@ -1460,7 +1460,8 @@ function loadDataForCorrection_Callback(hObject, eventdata, handles)
 
 global EPOCHSIZE EMG_TIMESTAMPS EPOCHstate EPOCHSIZEOF10sec EPOCHtime ISRECORDED...
     EPOCH_shiftsize INDEX Sleepstates EPOCHnum SAVED_index newname BoundIndex...
-    LBounds UBounds exactLowIndx exactHiIndx exactLowerTS exactUpperTS tbounds FileFlag
+    LBounds UBounds exactLowIndx exactHiIndx exactLowerTS exactUpperTS...
+    tbounds FileFlag Input3_enable Input4_enable
 global excelRowIdx
 
 cwd = pwd;
@@ -1483,6 +1484,17 @@ while terminate == 0
     sectionword=strcat('Section ',num2str(BoundIndex));
     set(handles.sectiontext,'string',sectionword);
     
+    %% Check if input files have been selected
+    inputFile = get(handles.Input3file,'TooltipString');
+    if isempty(inputFile)
+        Input3_enable = 0;
+        set(handles.Input3_checkbox, 'Value', 0);
+    end
+    inputFile = get(handles.Input4file,'TooltipString');
+    if isempty(inputFile)
+        Input4_enable = 0;
+        set(handles.Input4_checkbox, 'Value', 0);
+    end
     % *********** Timestamps extraction *********
     filename=get(handles.tstampsfile,'TooltipString');
     [path,name,ext]=fileparts(filename);  
@@ -1582,7 +1594,7 @@ thetaLowPass = 9; set(handles.Theta_hi, 'String', thetaLowPass);
 sigmaaHighPass = 10; set(handles.Sigma_lo, 'String', sigmaaHighPass);
 sigmaLowPass = 14; set(handles.Sigma_hi, 'String', sigmaLowPass);
 betaHighPass = 15; set(handles.Beta_lo, 'String', betaHighPass);
-betaLowPass = 20; set(handles.Beta_hi, 'String', B_hi);
+betaLowPass = 20; set(handles.Beta_hi, 'String', betaLowPass);
 
 set(handles.EEG_cutoff, 'String', 30);
 set(handles.EEG_Highpass_cutoff, 'String', '');
@@ -1590,7 +1602,7 @@ set(handles.Notch60, 'Value', 0);
 
 set(handles.EMG_cutoff, 'String', 30);
 set(handles.Notch60EMG, 'Value', 1);
-set(handles.EMG_LP_checkbox, 'String', '');
+% set(handles.EMG_LP_checkbox, 'String', '');
 
 set(handles.Input3_checkbox, 'Value', 0);
 set(handles.Input3_Highpass_cutoff, 'String', '');
@@ -1662,7 +1674,7 @@ if isnan(Input4_LP_Fc)
     Input4_LP_Fc = [];
 end
 Input4_Notch_enable= get(handles.Notch60Input4, 'Value');
-guidata(handles.sleepscorer,handles);
+guidata(handles.SleepScorer_2018a,handles);
 
 y1min = str2double(get(handles.ymin1, 'String'));
 if isnan(y1min)
@@ -1932,12 +1944,13 @@ switch scoreFileCorrectionType
         EPOCHstate=[state(:,5) state(:,6)];
 end
 clear state
-
+% Add a unique row search future to address older scored files that have
+% repeats in epochs!!!!
 
 exactLowerTime = exactLowerTS/10^6;
 exactUpperTime = exactUpperTS/10^6;
     
-lowIndex = find((t_stamps(:,2) - exactLowerTime)>=0,1);  %#ok<*ASGLU>
+lowIndex = find(abs((t_stamps(:,2) - exactLowerTime))< 0.01,1);  %#ok<*ASGLU>
 LO_INDEX = lowIndex;
 clear lowIndex exactLowerTime
 highIndex = find((t_stamps(:,2) < exactUpperTime), 1, 'last');
@@ -2052,22 +2065,22 @@ samples = double(Samples(:)');
 clear Samples
 
 % Precise time stamps should be calculated here:
-[EMG_TIMESTAMPS,EMG_SAMPLES] = generate_timestamps_from_Ncsfiles(Timestamps, samples, exactLow, exactHi, nsamp);
+[preciseTS,preciseSamples] = generate_timestamps_from_Ncsfiles(Timestamps, samples, exactLow, exactHi, nsamp);
 clear samples Timestamps
 
 physInput = 1;  %Needed to select proper error box in HeaderADBit.
 ADBit2uV = HeaderADBit(filename, physInput);    %Calls a function to extract the AD Bit Value.
-EMG_SAMPLES = EMG_SAMPLES * ADBit2uV;   %Convert EMG amplitude of signal from AD Bits to microvolts.
+preciseSamples = preciseSamples * ADBit2uV;   %Convert EMG amplitude of signal from AD Bits to microvolts.
 
 % Filter data:
 waitbar(0.4,waithandle,'Filtering the EMG data ...'); 
 figure(waithandle),pause(0.2),
 if ~isempty(EMG_g)
-    filtered_samples = filtfilt(EMG_sos, EMG_g, EMG_SAMPLES);
+    filtered_samples = filtfilt(EMG_sos, EMG_g, preciseSamples);
 else
-    filtered_samples = EMG_SAMPLES;
+    filtered_samples = preciseSamples;
 end
-clear EMG_SAMPLES
+clear preciseSamples
 
 % Optional 60Hz Notch Filter
 if EMG_Notch_enable ~= 0
@@ -2075,9 +2088,9 @@ if EMG_Notch_enable ~= 0
     [B_EMG_Notch,A_EMG_Notch] =  iirnotch(woB, woB/35);   % Default is OFF
     filtered_samples = filtfilt(B_EMG_Notch,A_EMG_Notch, filtered_samples);
 end
-EMG_TIMESTAMPS = EMG_TIMESTAMPS(1:sampfactor:end);
+EMG_TIMESTAMPS = preciseTS(1:sampfactor:end);
 EMG_SAMPLES = filtered_samples(1:sampfactor:end);
-clear physInput ADBit2uV filtered_samples SF
+clear physInput ADBit2uV filtered_samples SF preciseTS
 
 if isempty(y1min) || isempty(y1max)
    y1max =  ceil(mean(abs(EMG_SAMPLES)) + 3*std(abs(EMG_SAMPLES))); set(handles.ymax1, 'String', y1max);
@@ -2118,21 +2131,21 @@ samples=double(Samples(:)');
 clear Samples
 
 
-[EEG_TIMESTAMPS,EEG_SAMPLES] = generate_timestamps_from_Ncsfiles(Timestamps,samples, exactLow, exactHi, nsamp);
+[preciseTS,preciseSamples] = generate_timestamps_from_Ncsfiles(Timestamps,samples, exactLow, exactHi, nsamp);
 clear samples Timestamps
 physInput = 2;  %Needed to select proper error box in HeaderADBit.
 ADBit2uV = HeaderADBit(filename, physInput);    %Calls a function to extract the AD Bit Value.
-EEG_SAMPLES = EEG_SAMPLES * ADBit2uV;   %Convert EEG amplitude of signal from AD Bits to microvolts.
+preciseSamples = preciseSamples * ADBit2uV;   %Convert EEG amplitude of signal from AD Bits to microvolts.
 
 %% Filter data:
 waitbar(0.8,waithandle,'Filtering the EEG data ...'); 
 figure(waithandle),pause(0.2),
 if ~isempty(EEG_g)
-    filtered_samples = filtfilt(EEG_sos, EEG_g, EEG_SAMPLES);
+    filtered_samples = filtfilt(EEG_sos, EEG_g, preciseSamples);
 else
-    filtered_samples = EEG_SAMPLES;
+    filtered_samples = preciseSamples;
 end
-clear EEG_SAMPLES
+clear preciseSamples
 
 %  OPTIONAL 60Hz Notch filter for EEG signals
 if EEG_Notch_enable ~= 0
@@ -2140,9 +2153,9 @@ if EEG_Notch_enable ~= 0
     [B_EEG_Notch,A_EEG_Notch] =  iirnotch(wo, wo/35);   % Default is OFF
     filtered_samples = filtfilt(B_EEG_Notch,A_EEG_Notch, filtered_samples);
 end
-EEG_TIMESTAMPS = EEG_TIMESTAMPS(1:sampfactor2:end);
+EEG_TIMESTAMPS = preciseTS(1:sampfactor2:end);
 EEG_SAMPLES = filtered_samples(1:sampfactor2:end);
-clear physInput ADBit2uV filtered_samples
+clear physInput ADBit2uV filtered_samples preciseTS
 
 if isempty(y2min) || isempty(y2max)
    y2max =  ceil(mean(abs(EEG_SAMPLES)) + 3*std(abs(EEG_SAMPLES))); set(handles.ymax2, 'String', y2max);
@@ -2185,21 +2198,21 @@ if Input3_enable == 1
     
     
 
-    [INPUT3_TIMESTAMPS,INPUT3_SAMPLES]=generate_timestamps_from_Ncsfiles(Timestamps,samples, exactLow, exactHi, nsamp);
+    [preciseTS,preciseSamples]=generate_timestamps_from_Ncsfiles(Timestamps,samples, exactLow, exactHi, nsamp);
     clear samples Timestamps
     physInput = 3;  %Needed to select proper error box in HeaderADBit.
     ADBit2uV = HeaderADBit(filename, physInput);    %Calls a function to extract the AD Bit Value.
-    INPUT3_SAMPLES = INPUT3_SAMPLES * ADBit2uV;   %Convert INPUT3 amplitude of signal from AD Bits to microvolts.
+    preciseSamples = preciseSamples * ADBit2uV;   %Convert INPUT3 amplitude of signal from AD Bits to microvolts.
     
     %% Filter data:
     waitbar(0.8,waithandle,'Filtering INPUT 3 data ...'); 
     figure(waithandle),pause(0.2),
     if ~isempty(Input3_g)
-        filtered_samples = filtfilt(Input3_sos, Input3_g, INPUT3_SAMPLES);
+        filtered_samples = filtfilt(Input3_sos, Input3_g, preciseSamples);
     else
-        filtered_samples = INPUT3_SAMPLES;
+        filtered_samples = preciseSamples;
     end
-    clear INPUT3_SAMPLES
+    clear preciseSamples
 
     %  OPTIONAL 60Hz Notch filter for Input 3 signals
     if Input3_Notch_enable ~= 0
@@ -2207,13 +2220,13 @@ if Input3_enable == 1
         [B_Input3_Notch,A_Input3_Notch] =  iirnotch(wo, wo/35);   % Default is OFF
         filtered_samples = filtfilt(B_Input3_Notch,A_Input3_Notch, filtered_samples);
     end
-    INPUT3_TIMESTAMPS = INPUT3_TIMESTAMPS(1:sampfactor3:end);
+    INPUT3_TIMESTAMPS = preciseTS(1:sampfactor3:end);
     INPUT3_SAMPLES = filtered_samples(1:sampfactor3:end);
     if isempty(y3min) || isempty(y3max)
        y3max =  ceil(mean(abs(INPUT3_SAMPLES)) + 3*std(abs(INPUT3_SAMPLES))); set(handles.ymax3, 'String', y3max);
        y3min = -y3max; set(handles.ymin3, 'String', y3min);   
     end
-    clear physInput ADBit2uV filtered_samples
+    clear physInput ADBit2uV filtered_samples preciseTS
 end
 
 %%  ******    INPUT4 FILE extraction   *********
@@ -2251,21 +2264,21 @@ if Input4_enable == 1
     
     
 
-    [INPUT4_TIMESTAMPS,INPUT4_SAMPLES]=generate_timestamps_from_Ncsfiles(Timestamps,samples, exactLow, exactHi, nsamp);
+    [preciseTS,preciseSamples]=generate_timestamps_from_Ncsfiles(Timestamps,samples, exactLow, exactHi, nsamp);
     clear samples Timestamps
     physInput = 4;  %Needed to select proper error box in HeaderADBit.
     ADBit2uV = HeaderADBit(filename, physInput);    %Calls a function to extract the AD Bit Value.
-    INPUT4_SAMPLES = INPUT4_SAMPLES * ADBit2uV;   %Convert Input4 amplitude of signal from AD Bits to microvolts.
+    preciseSamples = preciseSamples * ADBit2uV;   %Convert Input4 amplitude of signal from AD Bits to microvolts.
     
     %% Filter data:
     waitbar(0.8,waithandle,'Filtering INPUT 4 data ...'); 
     figure(waithandle),pause(0.2),
     if ~isempty(Input4_g)
-        filtered_samples = filtfilt(Input4_sos, Input4_g, INPUT4_SAMPLES);
+        filtered_samples = filtfilt(Input4_sos, Input4_g, preciseSamples);
     else
-        filtered_samples = INPUT4_SAMPLES;
+        filtered_samples = preciseSamples;
     end
-    clear INPUT4_SAMPLES
+    clear preciseSamples
 
     %  OPTIONAL 60Hz Notch filter for Input 4 signals
     if Input4_Notch_enable ~= 0
@@ -2273,13 +2286,13 @@ if Input4_enable == 1
         [B_Input4_Notch,A_Input4_Notch] =  iirnotch(wo, wo/35);   % Default is OFF
         filtered_samples = filtfilt(B_Input4_Notch,A_Input4_Notch, filtered_samples);
     end
-    INPUT4_TIMESTAMPS = INPUT4_TIMESTAMPS(1:sampfactor4:end);
+    INPUT4_TIMESTAMPS = preciseTS(1:sampfactor4:end);
     INPUT4_SAMPLES = filtered_samples(1:sampfactor4:end);
     if isempty(y4min) || isempty(y4max)
        y4max =  ceil(mean(abs(INPUT4_SAMPLES)) + 3*std(abs(INPUT4_SAMPLES))); set(handles.ymax4, 'String', y4max);
        y4min = -y4max; set(handles.ymin4, 'String', y4min);   
     end
-    clear physInput ADBit2uV filtered_samples
+    clear physInput ADBit2uV filtered_samples preciseTS
 end
 
 waitbar(1,waithandle, 'Finished converting.. Now Loading the data ..');
